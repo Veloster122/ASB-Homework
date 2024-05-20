@@ -7,13 +7,15 @@ We made a code that transform Fasta file into Nexus file and then, we tested eac
 
 **Code usage in terminal:**
 
-Converter.py:
-```python Converter.py <fasta_file>```
+to run the converter:
+```python converter.py <fasta_file>```
 
-test_Converter.py:
-```python test_Converter.py <fasta_file>```
+to run the test:
+```python -m pytest test_converter.py <fasta_file>```
 
 **Function's functionallity**
+
+#fasta_functions.py
 
 Function read_file(fasta_file)
 ```
@@ -49,9 +51,36 @@ def make_nexus_file(sequences): #Another function that takes as input the 'seque
     print(nexus_file) #Prints the nexus file to the system output 
     return nexus_file #returns the nexus_file completed.
 ```
+
+#converter.py
+
 main function
 ```
 if len(sys.argv) < 2: #checks if the length of the sys.argv is less than 2
     print("Usage: python Converter.py <fasta_file>") '''Tutorial of how to use the python converter in the commandline interface'''
     sys.exit(1) #termination of the script
+```
+
+#test_converter.py
+
+Test make nexus data header
+```
+def test_make_nexus_data_header():
+    known_inputs={'seq1':'ATGCAACACAGACCAGCACAAC','seq2': 'ATATATATATATATAATATATA'} '''known inputs from "sequences" dictionary based on teste.fasta.txt'''
+    expected_outputs='NEXUS\nBEGIN DATA;\nDIMENSIONS NTAX=2 NCHAR=22;\nFORMAT DATATYPE=DNA MISSING=N GAP=-;\nMATRIX\n' ''' expected output after the script process the fasta file'''
+    assert fasta_functions.make_nexus_data_header(known_inputs) == expected_outputs '''this will compare the results from known inputs with expected outputs and see if its equal'''
+```
+Test make nexus matrix
+```   
+def test_make_nexus_matrix():
+    known_inputs={'seq1':'ATGCAACACAGACCAGCACAAC','seq2': 'ATATATATATATATAATATATA'} '''known inputs from "sequences" dictionary based on teste.fasta.txt'''
+    expected_outputs='seq1 ATGCAACACAGACCAGCACAAC\nseq2 ATATATATATATATAATATATA\n' ''' expected output after the script process the fasta file'''
+    assert fasta_functions.make_nexus_matrix(known_inputs) == expected_outputs '''this will compare the results from known inputs with expected outputs and see if its equal'''
+```
+Test make nexys file 
+```     
+def test_make_nexus_file():
+    known_inputs={'seq1':'ATGCAACACAGACCAGCACAAC','seq2': 'ATATATATATATATAATATATA'}'''known inputs from "sequences" dictionary based on teste.fasta.txt'''
+    expected_outputs='NEXUS\nBEGIN DATA;\nDIMENSIONS NTAX=2 NCHAR=22;\nFORMAT DATATYPE=DNA MISSING=N GAP=-;\nMATRIX\nseq1 ATGCAACACAGACCAGCACAAC\nseq2 ATATATATATATATAATATATA\nEND;\n' ''' expected output after the script process the fasta file'''
+    assert fasta_functions.make_nexus_file(known_inputs) == expected_outputs '''this will compare the results from known inputs with expected outputs and see if its equal'''
 ```
